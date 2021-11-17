@@ -7,7 +7,7 @@ Supports opensource xf86-video-ati and xf86-video-amdgpu drivers.
 This fork of https://github.com/marazmista/radeon-profile-daemon includes:
 
 * security fixes from https://github.com/marazmista/radeon-profile-daemon/pull/23 (modified)
-* debian package build scripts
+* debian package build scripts based on [upstream launchpad PPA](https://launchpad.net/~radeon-profile/+archive/ubuntu/stable)
 
 Tested with Ubuntu 20.04.
 
