@@ -1,6 +1,47 @@
-System daemon for reading info about Radeon GPU clocks and volts as well as control card power profiles so the GUI [radeon-profile](https://github.com/marazmista/radeon-profile) application can be run as normal user.
+System daemon for reading info about Radeon GPU clocks and volts as well as control card power profiles so the GUI [radeon-profile](https://github.com/spezifisch/radeon-profile) application can be run as normal user.
 
-Supprts opensource xf86-video-ati and  xf86-video-amdgpu drivers.
+Supports opensource xf86-video-ati and xf86-video-amdgpu drivers.
+
+# Fork
+
+This fork of https://github.com/marazmista/radeon-profile-daemon includes:
+
+* security fixes from https://github.com/marazmista/radeon-profile-daemon/pull/23 (modified)
+* debian package build scripts
+
+Tested with Ubuntu 20.04.
+
+# Build and install Debian/Ubuntu package
+
+Prerequisite packages:
+
+* debuild
+* devscripts
+* equivs
+
+Install build dependencies:
+
+```
+sudo mk-build-deps --install
+```
+
+*Note:* If you don't want to sign the package (when only installing it locally), add the following to `~/.devscripts`:
+
+```
+DEBUILD_DPKG_BUILDPACKAGE_OPTS="-us -uc -ui"
+```
+
+Build the package:
+
+```
+debuild
+```
+
+Then install with:
+
+```
+sudo dpkg -i ../radeon-profile-daemon_*.deb
+```
 
 # Dependencies
 
@@ -11,7 +52,7 @@ Supprts opensource xf86-video-ati and  xf86-video-amdgpu drivers.
 Type:
 
 ```
-git clone https://github.com/marazmista/radeon-profile-daemon.git &&
+git clone https://github.com/spezifisch/radeon-profile-daemon.git &&
 cd radeon-profile-daemon/radeon-profile-daemon
 qmake &&
 make
@@ -31,3 +72,4 @@ There is a tmpfiles file that can be used by opentmpfiles or systemd-tmpfiles in
 * radeon-profile: https://github.com/marazmista/radeon-profile
 * radeon-profile AUR package: https://aur.archlinux.org/packages/radeon-profile-git
 * radeon-profile thread: http://phoronix.com/forums/showthread.php?83602-radeon-profile-tool-for-changing-profiles-and-monitoring-some-GPU-parameters
+
