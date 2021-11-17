@@ -12,16 +12,20 @@ endif
 APPNAME := radeon-profile-daemon
 DESTDIR := $(CURDIR)/debian/$(APPNAME)
 
-build: build-stamp
-build-stamp:
+builddir:
+	mkdir -p builddir
 
+builddir/Makefile: builddir
+	cd builddir && qmake PREFIX=/usr ../$(APPNAME)/$(APPNAME).pro
+
+build: build-stamp
+
+build-stamp: builddir/Makefile
 	# Build process
-	cd $(APPNAME)
-	qmake PREFIX=/usr ./$(APPNAME)/$(APPNAME).pro
-	make $(MY_MAKEFLAGS)
+	cd builddir && make $(MY_MAKEFLAGS)
 	# End of build process
 
-	touch build-stamp
+	touch $@
 
 clean:
 		dh_testdir
@@ -35,27 +39,14 @@ install: build
 		dh_testroot
 		dh_prep
 		dh_installdirs
+		dh_installsystemd
+		dh_installtmpfiles
 		install -pdm755 $(DESTDIR)/usr/bin
 		###  Systemd directories
 		install -pdm755 $(DESTDIR)/lib/systemd/system
+		install -pdm755 $(DESTDIR)/usr/lib/tmpfiles.d
 		###  Copy radeon-profile-daemon
-		install -Dm755 $(CURDIR)/target/$(APPNAME) $(DESTDIR)/usr/bin/
-		###  Systemd start scrypt
-		#install -Dm664  $(CURDIR)/$(APPNAME)/extra/radeon-profile-daemon.service $(DESTDIR)/lib/systemd/system
-		echo '[Unit]' > $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo 'Description=radeon-profile daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '[Service]' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo 'Type=simple' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo 'ExecStart=/usr/bin/radeon-profile-daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo 'ExecStop=/usr/bin/killall radeon-profile-daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo 'ExecReload=/usr/bin/killall radeon-profile-daemon && /usr/bin/radeon-profile-daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '#Restart=always' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '#RestartSec=5' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '#Restart=on-failure' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo '[Install]' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
-		echo 'WantedBy=multi-user.target' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		install -Dm755 $(CURDIR)/builddir/target/$(APPNAME) $(DESTDIR)/usr/bin/
 
 # Build architecture-independent files here.
 binary-indep: build install

@@ -37,3 +37,14 @@ Makefile*
 
 # Binary
 radeon-profile-daemon/radeon-profile-daemon
+
+# debian package
+/builddir
+debian/*.debhelper.log
+debian/.debhelper/
+debian/files
+debian/radeon-profile-daemon.postinst.debhelper
+debian/radeon-profile-daemon.postrm.debhelper
+debian/radeon-profile-daemon.substvars
+debian/radeon-profile-daemon/
+
