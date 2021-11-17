@@ -1,0 +1,82 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+# This is the debhelper compatability version to use.
+
+MY_MAKEFLAGS=
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  NUMJOBS=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  MY_MAKEFLAGS=-j$(NUMJOBS)
+endif
+
+#export DH_COMPAT=3
+APPNAME := radeon-profile-daemon
+DESTDIR := $(CURDIR)/debian/$(APPNAME)
+
+build: build-stamp
+build-stamp:
+
+	# Build process
+	cd $(APPNAME)
+	qmake PREFIX=/usr ./$(APPNAME)/$(APPNAME).pro
+	make $(MY_MAKEFLAGS)
+	# End of build process
+
+	touch build-stamp
+
+clean:
+		dh_testdir
+		dh_testroot
+		rm -f build-stamp
+		# Add here commands to clean up after the build process.
+		dh_clean
+
+install: build
+		dh_testdir
+		dh_testroot
+		dh_prep
+		dh_installdirs
+		install -pdm755 $(DESTDIR)/usr/bin
+		###  Systemd directories
+		install -pdm755 $(DESTDIR)/lib/systemd/system
+		###  Copy radeon-profile-daemon
+		install -Dm755 $(CURDIR)/target/$(APPNAME) $(DESTDIR)/usr/bin/
+		###  Systemd start scrypt
+		#install -Dm664  $(CURDIR)/$(APPNAME)/extra/radeon-profile-daemon.service $(DESTDIR)/lib/systemd/system
+		echo '[Unit]' > $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo 'Description=radeon-profile daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '[Service]' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo 'Type=simple' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo 'ExecStart=/usr/bin/radeon-profile-daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo 'ExecStop=/usr/bin/killall radeon-profile-daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo 'ExecReload=/usr/bin/killall radeon-profile-daemon && /usr/bin/radeon-profile-daemon' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '#Restart=always' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '#RestartSec=5' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '#Restart=on-failure' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo '[Install]' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+		echo 'WantedBy=multi-user.target' >> $(DESTDIR)/lib/systemd/system/radeon-profile-daemon.service
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+		dh_testdir
+		dh_testroot
+		dh_installdocs
+		dh_installexamples
+		dh_installman
+		dh_link
+		#dh_strip --dbg-package=my-application-dbg
+		dh_compress
+		dh_fixperms
+		dh_installdeb
+		dh_shlibdeps
+		dh_gencontrol
+		dh_md5sums
+		dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

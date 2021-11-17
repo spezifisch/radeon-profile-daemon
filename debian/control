@@ -1,0 +1,22 @@
+Source: radeon-profile-daemon
+Section: x11
+Priority: optional
+Maintainer: gogo <trebelnik2@gmail.com>
+Uploaders: gogo <trebelnik2@gmail.com>
+Build-Depends: debhelper (>= 9),
+               build-essential,
+               xserver-xorg-video-ati,
+               xserver-xorg-video-amdgpu,
+               gcc,
+               gdb,
+               qt5-default,
+               qtdeclarative5-dev,
+               qt5-qmake 
+Standards-Version: 4.0.0
+Homepage: https://github.com/marazmista/radeon-profile-daemon
+
+Package: radeon-profile-daemon
+Architecture: any
+Depends: xserver-xorg-video-ati | xserver-xorg-video-amdgpu, radeon-profile
+Description: Daemon for Radeon Profile
+ AMD graphics card monitoring and tweaking tool.

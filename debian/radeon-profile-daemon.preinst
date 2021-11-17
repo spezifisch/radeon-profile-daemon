@@ -1,0 +1,27 @@
+#!/bin/sh
+set -e
+
+# Start Systemd or Upstart
+#systemdctl="which systemctl >/dev/null 2>&1"
+#if [ $systemdctl = systemctl]
+if [ -e "/bin/systemctl" ]; then
+		if [ -e "/etc/systemd/system/multi-user.target.wants/radeon-profile-daemon" ]; then
+			echo "Radeon profile daemon is enabled"
+			echo "Continuing to stop service"
+			systemctl stop radeon-profile-daemon.service
+		else
+			echo "Radeon profile daemon is not enabled"
+			echo "Nothing to stop"
+			#systemctl enable radeon-profile-daemon.service
+		fi
+		#sleep 2
+		#echo "Systemd is installed"
+		#echo "Starting Systemd"
+		#systemctl start radeon-profile-daemon.service
+else
+		echo "Upstart is installed"
+		echo "Stopping Upstart"
+		service radeon-profile-daemon stop
+fi
+
+exit 0

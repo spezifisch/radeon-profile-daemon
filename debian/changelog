@@ -1,0 +1,43 @@
+radeon-profile-daemon (20211116~ubuntu20.04.1) focal; urgency=high
+
+  * Merge https://github.com/marazmista/radeon-profile-daemon/pull/23
+
+ -- spezifisch <spezifisch@users.noreply.github.com>  Tue, 16 Nov 2021 15:53:32 +0000
+
+radeon-profile-daemon (20190603~ubuntu20.04.1) focal; urgency=low
+
+  * Auto build.
+
+ -- gogo <trebelnik2@gmail.com>  Tue, 26 May 2020 16:47:58 +0000
+
+radeon-profile-daemon (0.2.8) bionic; urgency=emergency
+
+  *  Fix build 
+  
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Fri, 6 Dec 2019 16:20:05 +0100
+
+radeon-profile-daemon (0.2.7) bionic; urgency=emergency
+
+  *  Fix build 
+  
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Thu, 5 Dec 2019 18:00:05 +0100
+
+radeon-profile-daemon (0.2.6) bionic; urgency=emergency
+
+  *  New version 
+  
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Wen, 13 Nov 2019 15:17:05 +0100
+
+radeon-profile-daemon (0.2.5) bionic; urgency=emergency
+
+  *  Added license 
+  *  Trivial spelling fix
+
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Sun, 28 Oct 2018 23:25:05 +0100
+
+radeon-profile-daemon (0.2.4~bionic) bionic; urgency=emergency
+
+  * Initial release
+
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Thu, 7 Jun 2018 19:37:05 +0100
+
